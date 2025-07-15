@@ -1,3 +1,58 @@
+<link href='https://fonts.googleapis.com/css?family=Roboto:100,200,300,400italic,400,500,500italic,700,700italic,900' rel='stylesheet' type='text/css'/>
+<style>
+body {
+  background:transparent;
+  margin:0;
+  padding:0;
+  color:#212121;font-family:Roboto,sans-serif;
+}
+.btn,.btn:active{background-image:none}
+.btn{font-weight:400;padding:6px 12px;margin-bottom:5px;font-size:14px;line-height:1.42857143;text-align:center;white-space:nowrap;-ms-touch-action:manipulation;touch-action:manipulation;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;border:1px solid transparent;border-radius:4px;cursor:pointer}
+.btn:active:focus,.btn:focus{outline:0}
+.btn:focus,.btn:hover{color:#333;text-decoration:none;outline:0}
+.btn:active{outline:0;-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,.125);box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}
+.btn-primary{color:#fff!important;background-color:#337ab7;border-color:#2e6da4}
+.btn-primary:focus,.button-group button:disabled{color:#fff;background-color:#286090;border-color:#122b40}
+.btn-primary:active,.btn-primary:hover{color:#fff;background-color:#286090;border-color:#204d74}
+.btn-danger{color:#fff!important;background-color:#d9534f;border-color:#d43f3a}
+.btn-danger:focus{color:#fff;background-color:#c9302c;border-color:#761c19}
+.btn-danger:active,.btn-danger:hover{color:#fff;background-color:#c9302c;border-color:#ac2925}
+.btn-info{color:#fff!important;background-color:#5bc0de;border-color:#46b8da}
+.btn-info:focus{color:#fff;background-color:#31b0d5;border-color:#1b6d85}
+.btn-info:active,.btn-info:hover{color:#fff;background-color:#31b0d5;border-color:#269abc}
+.btn-xs{font-size:12px;line-height:1.5;border-radius:3px;padding:1px 5px}
+#parser2 textarea#somewhere{background:#f8f8f8;border:1px solid #ccc;height:300px;width:100%;padding:10px;margin:0 0 10px;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;font-family:Consolas,Monaco,'Andale Mono',monospace;color:#111;white-space:pre-wrap;}
+#parser2 textarea#somewhere:active,#parser2 textarea#somewhere:focus{border:2px solid #e8554e;outline:0}
+.btn-sm{font-size:12px;line-height:1.5;border-radius:3px;padding:5px 10px}
+.btn-xs{font-size:12px;line-height:1.5;border-radius:3px;padding:1px 5px}
+.collapse{display:none}
+#parser2{position:relative}
+.alert-success{color:#3c763d;background-color:#dff0d8;border-color:#d6e9c6}
+.alert{padding:15px;border:1px solid transparent;border-radius:4px;position:absolute;top:10px;right:10px;min-width:230px}
+button.close{padding:0;cursor:pointer;background:0 0;border:0;-webkit-appearance:none;line-height:1;z-index:2}
+.close{float:right;font-size:1.5rem;font-weight:700;line-height:1;color:#000;text-shadow:0 1px 0 #fff;opacity:.2}
+button.close:focus{outline:0}
+.close:hover{opacity:1!important}
+#btnInfo h4{margin:0}
+#button-link,#btn_clear{display:none}
+.btn-reset{padding:0;border:0;background:0 0;position:absolute;top:10px;right:15px;color:#ddd;font-size:34px;font-weight:lighter;cursor:pointer;line-height:1;display:none;z-index:1}
+.btn-reset:hover{color:#555}
+.btn-reset:focus{outline:0}
+.clear{clear:both;display:block;margin-bottom:2px;}
+</style>
+<div id="parser2">
+<textarea id="somewhere" placeholder='Tulis/paste kode di sini lalu klik tombol Parse Codes' onfocusin="focusFunction()"></textarea>
+<div class='alert alert-success margin-bottom-20 collapse' id='btnInfo' role='alert'>
+        <button class='close close-copy' onclick='document.getElementById(&quot;btnInfo&quot;).style.display = &quot;none&quot;;cdClear();' type='button'><span aria-hidden='true'>&#215;</span></button>
+        <h4>Codes copied to clipboard!</h4>
+      </div>
+<button class='btn-reset' id='btn-reset' onclick='cdClear2();'>&times;</button>
+      <br/>
+<button onclick="convert();textareaReplaceLineBreaks('#somewhere');" class='btn btn-primary btn-sm btn-parse' type="button">Parse Codes</button>
+<div class="clear"></div>
+<button class='btn button-link btn-xs btn-info' id='button-link' data-clipboard-action='copy' data-clipboard-target='#somewhere' type='submit'>Copy codes to clipboard!</button> <button class='btn btn-danger btn-xs' id='btn_clear' onclick='cdClear();'>Bersihkan</button>
+</div>
+<script type="text/javascript">
 function convert() {
     var ele1 = document.getElementById("somewhere");
     var replaced;
@@ -5,38 +60,52 @@ function convert() {
     replaced = replaced.replace(/&/ig, "&amp;");
     replaced = replaced.replace(/</ig, "&lt;");
     replaced = replaced.replace(/>/ig, "&gt;");
-    replaced = replaced.replace(/"/ig, "&quot;");
-    replaced = replaced.replace(/'/ig, "&#039;");
     replaced = replaced.replace(/&#177;/ig, "&plusmn;");
     replaced = replaced.replace(/&#169;/ig, "&copy;");
     replaced = replaced.replace(/&#174;/ig, "&reg;");
     replaced = replaced.replace(/ya'll/ig, "ya'll");
+    replaced = replaced.replace(/^/, "<pre><code>");
+    replaced = replaced.replace(/$/, "</code></pre>");
+    replaced = replaced.replace(/  /g, "&nbsp; ");
+    replaced = replaced.replace(/(\r\n|\n)/g, "<br />\r\n")
     ele1.value = replaced;
 	document.getElementById("button-link")
         .style.display = "inline-block";
     document.getElementById("btn_clear")
         .style.display = "inline-block";
+		document.getElementById("btn-reset")
+        .style.display = "none";
 }
 function cdClear() {
   var wtarea = document.getElementById('somewhere');
   wtarea.value = '';
   document.getElementById("btnInfo")
         .style.display = "none",document.getElementById("button-link")
+        .style.display = "none",document.getElementById("btn_clear")
         .style.display = "none"
 }
-
-/*!
- * clipboard.js v1.5.16
- * https://zenorocha.github.io/clipboard.js
- *
- * Licensed MIT © Zeno Rocha
- */
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var t;t="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,t.Clipboard=e()}}(function(){var e,t,n;return function e(t,n,i){function o(a,c){if(!n[a]){if(!t[a]){var l="function"==typeof require&&require;if(!c&&l)return l(a,!0);if(r)return r(a,!0);var s=new Error("Cannot find module '"+a+"'");throw s.code="MODULE_NOT_FOUND",s}var u=n[a]={exports:{}};t[a][0].call(u.exports,function(e){var n=t[a][1][e];return o(n?n:e)},u,u.exports,e,t,n,i)}return n[a].exports}for(var r="function"==typeof require&&require,a=0;a<i.length;a++)o(i[a]);return o}({1:[function(e,t,n){function i(e,t){for(;e&&e.nodeType!==o;){if(e.matches(t))return e;e=e.parentNode}}var o=9;if(Element&&!Element.prototype.matches){var r=Element.prototype;r.matches=r.matchesSelector||r.mozMatchesSelector||r.msMatchesSelector||r.oMatchesSelector||r.webkitMatchesSelector}t.exports=i},{}],2:[function(e,t,n){function i(e,t,n,i,r){var a=o.apply(this,arguments);return e.addEventListener(n,a,r),{destroy:function(){e.removeEventListener(n,a,r)}}}function o(e,t,n,i){return function(n){n.delegateTarget=r(n.target,t),n.delegateTarget&&i.call(e,n)}}var r=e("./closest");t.exports=i},{"./closest":1}],3:[function(e,t,n){n.node=function(e){return void 0!==e&&e instanceof HTMLElement&&1===e.nodeType},n.nodeList=function(e){var t=Object.prototype.toString.call(e);return void 0!==e&&("[object NodeList]"===t||"[object HTMLCollection]"===t)&&"length"in e&&(0===e.length||n.node(e[0]))},n.string=function(e){return"string"==typeof e||e instanceof String},n.fn=function(e){var t=Object.prototype.toString.call(e);return"[object Function]"===t}},{}],4:[function(e,t,n){function i(e,t,n){if(!e&&!t&&!n)throw new Error("Missing required arguments");if(!c.string(t))throw new TypeError("Second argument must be a String");if(!c.fn(n))throw new TypeError("Third argument must be a Function");if(c.node(e))return o(e,t,n);if(c.nodeList(e))return r(e,t,n);if(c.string(e))return a(e,t,n);throw new TypeError("First argument must be a String, HTMLElement, HTMLCollection, or NodeList")}function o(e,t,n){return e.addEventListener(t,n),{destroy:function(){e.removeEventListener(t,n)}}}function r(e,t,n){return Array.prototype.forEach.call(e,function(e){e.addEventListener(t,n)}),{destroy:function(){Array.prototype.forEach.call(e,function(e){e.removeEventListener(t,n)})}}}function a(e,t,n){return l(document.body,e,t,n)}var c=e("./is"),l=e("delegate");t.exports=i},{"./is":3,delegate:2}],5:[function(e,t,n){function i(e){var t;if("SELECT"===e.nodeName)e.focus(),t=e.value;else if("INPUT"===e.nodeName||"TEXTAREA"===e.nodeName)e.focus(),e.setSelectionRange(0,e.value.length),t=e.value;else{e.hasAttribute("contenteditable")&&e.focus();var n=window.getSelection(),i=document.createRange();i.selectNodeContents(e),n.removeAllRanges(),n.addRange(i),t=n.toString()}return t}t.exports=i},{}],6:[function(e,t,n){function i(){}i.prototype={on:function(e,t,n){var i=this.e||(this.e={});return(i[e]||(i[e]=[])).push({fn:t,ctx:n}),this},once:function(e,t,n){function i(){o.off(e,i),t.apply(n,arguments)}var o=this;return i._=t,this.on(e,i,n)},emit:function(e){var t=[].slice.call(arguments,1),n=((this.e||(this.e={}))[e]||[]).slice(),i=0,o=n.length;for(i;i<o;i++)n[i].fn.apply(n[i].ctx,t);return this},off:function(e,t){var n=this.e||(this.e={}),i=n[e],o=[];if(i&&t)for(var r=0,a=i.length;r<a;r++)i[r].fn!==t&&i[r].fn._!==t&&o.push(i[r]);return o.length?n[e]=o:delete n[e],this}},t.exports=i},{}],7:[function(t,n,i){!function(o,r){if("function"==typeof e&&e.amd)e(["module","select"],r);else if("undefined"!=typeof i)r(n,t("select"));else{var a={exports:{}};r(a,o.select),o.clipboardAction=a.exports}}(this,function(e,t){"use strict";function n(e){return e&&e.__esModule?e:{default:e}}function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var o=n(t),r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},a=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),c=function(){function e(t){i(this,e),this.resolveOptions(t),this.initSelection()}return a(e,[{key:"resolveOptions",value:function e(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};this.action=t.action,this.emitter=t.emitter,this.target=t.target,this.text=t.text,this.trigger=t.trigger,this.selectedText=""}},{key:"initSelection",value:function e(){this.text?this.selectFake():this.target&&this.selectTarget()}},{key:"selectFake",value:function e(){var t=this,n="rtl"==document.documentElement.getAttribute("dir");this.removeFake(),this.fakeHandlerCallback=function(){return t.removeFake()},this.fakeHandler=document.body.addEventListener("click",this.fakeHandlerCallback)||!0,this.fakeElem=document.createElement("textarea"),this.fakeElem.style.fontSize="12pt",this.fakeElem.style.border="0",this.fakeElem.style.padding="0",this.fakeElem.style.margin="0",this.fakeElem.style.position="absolute",this.fakeElem.style[n?"right":"left"]="-9999px";var i=window.pageYOffset||document.documentElement.scrollTop;this.fakeElem.addEventListener("focus",window.scrollTo(0,i)),this.fakeElem.style.top=i+"px",this.fakeElem.setAttribute("readonly",""),this.fakeElem.value=this.text,document.body.appendChild(this.fakeElem),this.selectedText=(0,o.default)(this.fakeElem),this.copyText()}},{key:"removeFake",value:function e(){this.fakeHandler&&(document.body.removeEventListener("click",this.fakeHandlerCallback),this.fakeHandler=null,this.fakeHandlerCallback=null),this.fakeElem&&(document.body.removeChild(this.fakeElem),this.fakeElem=null)}},{key:"selectTarget",value:function e(){this.selectedText=(0,o.default)(this.target),this.copyText()}},{key:"copyText",value:function e(){var t=void 0;try{t=document.execCommand(this.action)}catch(e){t=!1}this.handleResult(t)}},{key:"handleResult",value:function e(t){this.emitter.emit(t?"success":"error",{action:this.action,text:this.selectedText,trigger:this.trigger,clearSelection:this.clearSelection.bind(this)})}},{key:"clearSelection",value:function e(){this.target&&this.target.blur(),window.getSelection().removeAllRanges()}},{key:"destroy",value:function e(){this.removeFake()}},{key:"action",set:function e(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"copy";if(this._action=t,"copy"!==this._action&&"cut"!==this._action)throw new Error('Invalid "action" value, use either "copy" or "cut"')},get:function e(){return this._action}},{key:"target",set:function e(t){if(void 0!==t){if(!t||"object"!==("undefined"==typeof t?"undefined":r(t))||1!==t.nodeType)throw new Error('Invalid "target" value, use a valid Element');if("copy"===this.action&&t.hasAttribute("disabled"))throw new Error('Invalid "target" attribute. Please use "readonly" instead of "disabled" attribute');if("cut"===this.action&&(t.hasAttribute("readonly")||t.hasAttribute("disabled")))throw new Error('Invalid "target" attribute. You can\'t cut text from elements with "readonly" or "disabled" attributes');this._target=t}},get:function e(){return this._target}}]),e}();e.exports=c})},{select:5}],8:[function(t,n,i){!function(o,r){if("function"==typeof e&&e.amd)e(["module","./clipboard-action","tiny-emitter","good-listener"],r);else if("undefined"!=typeof i)r(n,t("./clipboard-action"),t("tiny-emitter"),t("good-listener"));else{var a={exports:{}};r(a,o.clipboardAction,o.tinyEmitter,o.goodListener),o.clipboard=a.exports}}(this,function(e,t,n,i){"use strict";function o(e){return e&&e.__esModule?e:{default:e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function a(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function c(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}function l(e,t){var n="data-clipboard-"+e;if(t.hasAttribute(n))return t.getAttribute(n)}var s=o(t),u=o(n),f=o(i),d=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),h=function(e){function t(e,n){r(this,t);var i=a(this,(t.__proto__||Object.getPrototypeOf(t)).call(this));return i.resolveOptions(n),i.listenClick(e),i}return c(t,e),d(t,[{key:"resolveOptions",value:function e(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};this.action="function"==typeof t.action?t.action:this.defaultAction,this.target="function"==typeof t.target?t.target:this.defaultTarget,this.text="function"==typeof t.text?t.text:this.defaultText}},{key:"listenClick",value:function e(t){var n=this;this.listener=(0,f.default)(t,"click",function(e){return n.onClick(e)})}},{key:"onClick",value:function e(t){var n=t.delegateTarget||t.currentTarget;this.clipboardAction&&(this.clipboardAction=null),this.clipboardAction=new s.default({action:this.action(n),target:this.target(n),text:this.text(n),trigger:n,emitter:this})}},{key:"defaultAction",value:function e(t){return l("action",t)}},{key:"defaultTarget",value:function e(t){var n=l("target",t);if(n)return document.querySelector(n)}},{key:"defaultText",value:function e(t){return l("text",t)}},{key:"destroy",value:function e(){this.listener.destroy(),this.clipboardAction&&(this.clipboardAction.destroy(),this.clipboardAction=null)}}]),t}(u.default);e.exports=h})},{"./clipboard-action":7,"good-listener":4,"tiny-emitter":6}]},{},[8])(8)});
+function cdClear2() {
+  var wtarea = document.getElementById('somewhere');
+  wtarea.value = '';
+  document.getElementById("btn-reset")
+        .style.display = "none";
+}
+function focusFunction() {
+    document.getElementById("btn-reset").style.display = "block";
+}
+</script>
+<script src='https://cdn.statically.io/gh/zenorocha/clipboard.js/v1.5.16/dist/clipboard.min.js'></script>
+<script>
+//<![CDATA[
 var clipboard = new Clipboard(".button-link");
 clipboard.on("success", function (o) {
     console.log(o), document.getElementById("btnInfo")
-        .style.display = "block", document.getElementById("somewhere")
+        .style.display = "block", document.getElementById("button-link")
+        .style.display = "none", document.getElementById("btn-reset")
+        .style.display = "none", document.getElementById("somewhere")
         .value = ""
 }), clipboard.on("error", function (o) {
     console.log(o)
 });
+//]]>
+</script>
